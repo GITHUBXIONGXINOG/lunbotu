@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body{
+            margin: 0;
+        }
+        .move{
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            animation: demo3 3s;
+        }
+        /*
+            通过  transform: translateX(); 移动花费时间最少,性能最好
+            translate不会改变元素布居,改变值只会改变元素自身的位置,不会影响其它元素,所有消耗的性能少的得多
+            动起来的东西就不要使用margin,padding,left等样式
+        */
+
+
+        /*花费的时间是207ms*/
+        @keyframes demo1 {
+            from{
+                left: 0;
+            }
+            to{
+                left: 300px;
+            }
+        }
+        /*花费的时间是238ms*/
+        @keyframes demo2 {
+            from{
+                margin-left: 0;
+            }
+            to{
+                margin-left: 300px;
+            }
+        }
+        /*花费时间是138ms*/
+        @keyframes demo3 {
+            from{
+                transform: translateX(0);
+            }
+            to{
+                transform: translateX(300px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="move"></div>
+</body>
+</html>

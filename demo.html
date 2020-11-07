@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>轮播图</title>
+    <style>
+        body,ul{
+            margin: 0;
+        }
+        ul{
+            padding-left: 0;
+            list-style: none;
+        }
+        /*最外层*/
+        .content{
+            width: 1500px;
+            height: 438px;
+            /*background: red;*/
+            margin: 87px auto 0;
+        }
+        /*图片列表外框*/
+        .imglist{
+            width: 1500px;
+            height: 375px;
+            /*background: blue;*/
+        }
+        /*设置图片高度*/
+        ul >li >img{
+            height: 375px;
+        }
+        /*图片列表*/
+        .imglist>ul{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        /*主图片样式*/
+        .imglist>ul>li{
+            position: absolute;
+            width: 939px;
+            height: 375px;
+            transition: .5s;
+        }
+
+        /*导航按钮*/
+        .lineb{
+            width: 1500px;
+            height: 64px;
+            /*background: green;*/
+            text-align: center;
+        }
+
+        .lineb::after{
+            content:"";
+            width: 0;
+            height: 100%;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /*最左边图片位置*/
+        .list1{
+            transform: translateX(0) scale(0.81);
+            transform-origin:0 100% ;
+            /*设置层级*/
+            z-index: 1;
+        }
+        /*中间主图*/
+        .list2{
+            /* 280px是第1,3,4,5,6图片的一半 */
+            transform: translateX(280px);
+            z-index: 2;
+        }
+        /*第3张图片的位置*/
+        .list3{
+            /*
+                280px(第2张图片的位置)+940px(第2张图片的长度)-280px(第3张图片被盖住的一半长度)=940px
+            */
+            transform: translateX(940px) scale(0.81);
+            transform-origin: 100% 100%;
+            z-index: 1;
+        }
+        .list4{
+            /*
+            940px(第3张图片的位置)+560px(第3张图片的长度)-280px(第3张图片被盖住的一半长度)=1220px
+        */
+            transform: translateX(1220px) scale(0.81);
+            transform-origin: 100% 100%;
+
+        }
+        .list5{
+            transform: translateX(1500px) scale(0.81);
+            transform-origin: 100% 100%;
+
+        }
+        .list6{
+            transform: translateX(1780px) scale(0.81);
+            transform-origin: 100% 100%;
+
+        }
+
+        /*导航按钮*/
+        .lineb > span{
+            /*
+                行内元素不能设置宽高,改成块元素,才能设置宽高
+                inline-block 行内块元素,能设置宽高,但仍然符合行内块元素的设置
+            */
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #e5e5e5;
+            margin: auto;
+            /*border: 1px solid red;*/
+
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <!--图片-->
+        <div class="imglist">
+           <!-- ul>li.list$*6>img[src="img/$.jpg"] -->
+            <ul>
+                <li class="list1"><img src="img/1.jpg" alt=""></li>
+                <li class="list2"><img src="img/2.jpg" alt=""></li>
+                <li class="list3"><img src="img/3.jpg" alt=""></li>
+                <li class="list4"><img src="img/4.jpg" alt=""></li>
+                <li class="list5"><img src="img/5.jpg" alt=""></li>
+                <li class="list6"><img src="img/6.jpg" alt=""></li>
+            </ul>
+        </div>
+        <!--导航按钮-->
+        <div class="lineb">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <script>
+       /*
+       *    1.设置按钮颜色
+       *        1.获取当前应该变色的按钮的索引值(第几个按钮)
+       *        2.找到该元素并设置一个绿色
+       * */
+       var index=0;//默认情况下第一个按钮是绿色
+       var aSpan=document.querySelectorAll("span")
+       /*定义一个数组存储索引list的名字*/
+       var aListName=["list1","list2","list3","list4","list5","list6"]
+       var aLi=document.querySelectorAll("li")
+
+       /*设置按钮颜色功能*/
+       function setLineBColor() {
+         for (var i=0,len=aSpan.length;i<len;i++){
+             /*把所有按钮变成灰色*/
+             aSpan[i].style.background="#e5e5e5"
+         }
+         /*把当前索引值的按钮设置为深色*/
+         aSpan[index].style.background="#b2b2b2"
+       }
+       setLineBColor()
+
+       /*定义向下翻页*/
+       function nextPage() {
+           /*把数组里最后一个名字插入到第一个*/
+           /* list6,1,2,3,4,5,6 */
+           /*把数组最后一个名字复制,并插入到第一个位置来*/
+            aListName.unshift(aListName[5])
+           /*pop出栈,删除最后一个值*/
+            aListName.pop()
+           /*setAttribute设置属性,存在则覆盖*/
+           for (var i=0,len=aLi.length;i<len;i++){
+               aLi[i].setAttribute("class",aListName[i])
+           }
+           /*下一页后序号加一*/
+           index = index < 5 ? index+1 : 0
+           /*重新设置按钮颜色*/
+           setLineBColor()
+       }
+       /*定义向上翻页*/
+       function prePage() {
+           /*把数组里第一个名字插入到最后一个*/
+           /* list2,3,4,5,6,1 */
+           /*把数组第一个位置复制,并插入到来最后*/
+           aListName.push(aListName[0])
+           /*删除第一个值*/
+           aListName.shift()
+           /*setAttribute设置属性,存在则覆盖*/
+           for (var i=0,len=aLi.length;i<len;i++){
+               aLi[i].setAttribute("class",aListName[i])
+           }
+           /*上一页后序号减一*/
+           index = index > 0 ? index-1 : 5
+           /*重新设置按钮颜色*/
+           setLineBColor()
+       }
+
+       /*找到第1,3个图片*/
+       var list1=document.querySelector('.list1')
+       var list3=document.querySelector('.list3')
+/*
+       /!* 事件绑定,绑定元素本身 *!/
+       list1.onclick=prePage
+       list3.onclick=nextPage
+*/
+        var imgList=document.querySelector(".imglist")
+       /* addEventListener添加事件监听 */
+       imgList.addEventListener("click",function (ev) {
+        // console.log(ev.target.parentNode.getAttribute("class"))
+           if (ev.target.parentNode.getAttribute("class")==="list1"){
+               prePage()
+           }
+           if (ev.target.parentNode.getAttribute("class")==="list3"){
+               nextPage()
+           }
+       })
+
+
+    </script>
+
+</body>
+</html>
+<!--
+    性能:
+        1:js css通过元素的样式实现
+            1.设置样式
+            2.计算最终样式
+            3.布居(牵一发动全身 最耗性能)
+            4.绘制(分层)
+            5.合并渲染
+            translate不会改变元素布居,改变值只会改变元素自身的位置,不会影响其它元素,所有消耗的性能少的得多
+            动起来的东西就不要使用margin,padding,left等样式
+        2:js 在canvas实现动画
+     轮播图
+        1:左右切换
+        2:无缝
+        3:3d
+
+-->
